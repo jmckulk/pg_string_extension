@@ -1,1 +1,3 @@
-pg_string_extension.o
+*.o
+*.so
+.DS_STORE
