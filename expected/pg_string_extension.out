@@ -1,0 +1,49 @@
+CREATE EXTENSION pg_string_extension;
+SELECT is_palindrome('');
+ is_palindrome 
+---------------
+ f
+(1 row)
+
+SELECT is_palindrome('a');
+ is_palindrome 
+---------------
+ t
+(1 row)
+
+SELECT is_palindrome('aa');
+ is_palindrome 
+---------------
+ t
+(1 row)
+
+SELECT is_palindrome('aba');
+ is_palindrome 
+---------------
+ t
+(1 row)
+
+SELECT is_palindrome('helloolleh');
+ is_palindrome 
+---------------
+ t
+(1 row)
+
+SELECT is_palindrome('world');
+ is_palindrome 
+---------------
+ f
+(1 row)
+
+SELECT is_palindrome('aaab');
+ is_palindrome 
+---------------
+ f
+(1 row)
+
+SELECT is_palindrome('helloollehhelloollehhelloollehhelloollehhelloollehhelloollehhelloollehhelloollehhelloollehhelloolleh');
+ is_palindrome 
+---------------
+ t
+(1 row)
+

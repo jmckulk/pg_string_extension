@@ -2,6 +2,7 @@
 #include <string.h>
 #include "fmgr.h"
 #include "utils/geo_decls.h"
+#include "utils/builtins.h"
 
 #ifdef PG_MODULE_MAGIC
 PG_MODULE_MAGIC;
@@ -25,9 +26,29 @@ PG_FUNCTION_INFO_V1(is_palindrome);
 
 Datum
 is_palindrome(PG_FUNCTION_ARGS){
-  text *t = PG_GETARG_TEXT_PP(0);
+  text *word = PG_GETARG_TEXT_PP(0);
 
-  
+  char * c_word = text_to_cstring(word);
+  int len = strlen(c_word);
 
-  PG_RETURN_BOOL(false);
+  if(len == 0){
+    PG_RETURN_BOOL(false);
+  }
+
+  if(len == 1){
+    PG_RETURN_BOOL(true);
+  }
+
+  int front = 0, back = len - 1;
+
+  while((front < back) && (front != back)){
+    if(c_word[front] != c_word[back]){
+      PG_RETURN_BOOL(false);
+    } else {
+      front++;
+      back--;
+    }
+  }
+
+  PG_RETURN_BOOL(true);
 }

@@ -5,6 +5,6 @@ CREATE FUNCTION echo_text(text) RETURNS text
  AS '$libdir/pg_string_extension', 'echo_text'
  LANGUAGE C STRICT;
 
-CREATE FUNCTION is_palindrome(text) RETURNS bool
+CREATE FUNCTION is_palindrome(text) RETURNS boolean
   AS '$libdir/pg_string_extension', 'is_palindrome'
   LANGUAGE C STRICT;
