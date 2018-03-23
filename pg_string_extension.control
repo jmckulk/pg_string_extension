@@ -1,0 +1,4 @@
+# PostgreSQL String Extension
+comment = 'string functions for PostgreSQL'
+default_version = '0.1'
+relocatable = false
