@@ -8,39 +8,12 @@
 PG_MODULE_MAGIC;
 #endif
 
-PG_FUNCTION_INFO_V1(echo_text);
-
 int compare(const void*, const void*);
 int len_with_no_spaces(const char *s);
-int len_with_no_spaces(const char *s){
-  const char * sc;
-  int count = 0;
-  sc = s;
 
-  while(*sc != '\0'){
-    if(*sc == ' '){
-      count++;
-    }
-    sc++;
-  }
-
-  return sc - s - count;
-}
-
-Datum
-echo_text(PG_FUNCTION_ARGS){
-  text *t = PG_GETARG_TEXT_PP(0);
-  text *new_t = (text *) palloc(VARSIZE_ANY_EXHDR(t) + VARHDRSZ);
-  SET_VARSIZE(new_t, VARSIZE_ANY_EXHDR(t) + VARHDRSZ);
-  memcpy( (void *) VARDATA(new_t),
-          (void *) VARDATA_ANY(t),
-          VARSIZE_ANY_EXHDR(t));
-  PG_RETURN_TEXT_P(new_t);
-}
-
-
+// checks if string is a palindrome
+// letters must be the same case ex. ("hannah" not "hannaH")
 PG_FUNCTION_INFO_V1(is_palindrome);
-
 Datum
 is_palindrome(PG_FUNCTION_ARGS){
   text *word = PG_GETARG_TEXT_PP(0);
@@ -70,36 +43,9 @@ is_palindrome(PG_FUNCTION_ARGS){
   PG_RETURN_BOOL(true);
 }
 
-int compare(const void* a, const void* b){
-  char char_a = *((char*) a);
-  char char_b = *((char*) b);
-
-  if(char_a == char_b){
-    return 0;
-  } else if(char_a < char_b){
-    return -1;
-  } else {
-    return 1;
-  }
-}
-
-PG_FUNCTION_INFO_V1(sort_chars);
-
-Datum
-sort_chars(PG_FUNCTION_ARGS){
-  text *unsorted = PG_GETARG_TEXT_PP(0);
-  char *unsorted_c = text_to_cstring(unsorted);
-  int len = strlen(unsorted_c);
-
-  qsort(unsorted_c, len, sizeof(char), compare);
-
-  text *sorted = cstring_to_text(unsorted_c);
-
-  PG_RETURN_TEXT_P(sorted);
-}
-
+// checks if two strings are an anagram of eachother
+// works on strings with spaces but does not account for uppercase letters
 PG_FUNCTION_INFO_V1(is_anagram);
-
 Datum
 is_anagram(PG_FUNCTION_ARGS){
   text *word_a = PG_GETARG_TEXT_PP(0);
@@ -130,4 +76,79 @@ is_anagram(PG_FUNCTION_ARGS){
   }
 
   PG_RETURN_BOOL(true);
+}
+
+
+// sort function: uses qsort and compares with helper function compare
+PG_FUNCTION_INFO_V1(sort_chars);
+Datum
+sort_chars(PG_FUNCTION_ARGS){
+  text *unsorted = PG_GETARG_TEXT_PP(0);
+  char *unsorted_c = text_to_cstring(unsorted);
+  int len = strlen(unsorted_c);
+
+  qsort(unsorted_c, len, sizeof(char), compare);
+
+  text *sorted = cstring_to_text(unsorted_c);
+
+  PG_RETURN_TEXT_P(sorted);
+}
+
+// ----- Extra functions / helper functions
+// find the length of string ignoring spaces
+// does not ignore other characters that are not letters
+int len_with_no_spaces(const char *s){
+  const char * sc;
+  int count = 0;
+  sc = s;
+
+  while(*sc != '\0'){
+    if(*sc == ' '){
+      count++;
+    }
+    sc++;
+  }
+
+  return sc - s - count;
+}
+
+/* compare function sorts characters into alphabetical order with uppercase
+ letters first. The characters are stored in a float so that 31.5 can be added
+ to the uppercase letters. 31.5 instead of 32 (the difference between ascii up/low case)
+ putting uppercase characters ahead of their lowercase counterparts but not out of
+ alphabetical order */
+int compare(const char* a, const char* b){
+  float char_a = *((char*) a);
+  float char_b = *((char*) b);
+
+  if(char_a >= 65 && char_a <= 90){
+    char_a += 31.5;
+  }
+
+  if(char_b >= 65 && char_b <= 90){
+    char_b += 31.5;
+  }
+
+  if(char_a == char_b){
+    return 0;
+  } else if(char_a < char_b){
+    return -1;
+  } else {
+    return 1;
+  }
+}
+
+
+// first function used to test if extensions were setup correctly
+PG_FUNCTION_INFO_V1(echo_text);
+
+Datum
+echo_text(PG_FUNCTION_ARGS){
+  text *t = PG_GETARG_TEXT_PP(0);
+  text *new_t = (text *) palloc(VARSIZE_ANY_EXHDR(t) + VARHDRSZ);
+  SET_VARSIZE(new_t, VARSIZE_ANY_EXHDR(t) + VARHDRSZ);
+  memcpy( (void *) VARDATA(new_t),
+          (void *) VARDATA_ANY(t),
+          VARSIZE_ANY_EXHDR(t));
+  PG_RETURN_TEXT_P(new_t);
 }

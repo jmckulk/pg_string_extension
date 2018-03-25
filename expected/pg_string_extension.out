@@ -122,6 +122,5 @@ SELECT sort_chars('qwertyuiopasdfghjklzxcvbnm');
 SELECT sort_chars('CcBbAa');
  sort_chars
 ------------
- ABCabc
+ AaBbCc
 (1 row)
- 
