@@ -26,7 +26,11 @@ is_palindrome(PG_FUNCTION_ARGS){
   }
 
   if(len == 1){
-    PG_RETURN_BOOL(true);
+    if((c_word[0] >= 65 && c_word[0] <= 90) || (c_word[0] >= 97 && c_word[0] <= 122)){
+      PG_RETURN_BOOL(true);
+    } else {
+      PG_RETURN_BOOL(false);
+    }
   }
 
   int front = 0, back = len - 1;
@@ -56,6 +60,10 @@ is_anagram(PG_FUNCTION_ARGS){
 
   int len_no_a = len_with_no_spaces(c_word_a);
   int len_no_b = len_with_no_spaces(c_word_b);
+
+  if(len_no_a == 0 || len_no_b == 0){
+    PG_RETURN_BOOL(false);
+  }
 
   if(len_no_a != len_no_b){
     PG_RETURN_BOOL(false);
@@ -117,7 +125,7 @@ int len_with_no_spaces(const char *s){
  to the uppercase letters. 31.5 instead of 32 (the difference between ascii up/low case)
  putting uppercase characters ahead of their lowercase counterparts but not out of
  alphabetical order */
-int compare(const char* a, const char* b){
+int compare(const void* a, const void* b){
   float char_a = *((char*) a);
   float char_b = *((char*) b);
 
