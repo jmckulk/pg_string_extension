@@ -108,9 +108,19 @@ is_anagram(PG_FUNCTION_ARGS){
   char *c_word_a = text_to_cstring(word_a);
   char *c_word_b = text_to_cstring(word_b);
 
+  int len_no_a = len_with_no_spaces(c_word_a);
+  int len_no_b = len_with_no_spaces(c_word_b);
+
+  if(len_no_a != len_no_b){
+    PG_RETURN_BOOL(false);
+  }
+
   int i, len_a = strlen(c_word_a);
 
   for(i = 0; i < len_a; i++){
+    while(c_word_a[i] == ' '){
+      i++;
+    }
     char * char_b = strchr(c_word_b, c_word_a[i]);
     if(char_b == NULL){
       PG_RETURN_BOOL(false);
