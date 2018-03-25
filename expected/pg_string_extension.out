@@ -47,3 +47,81 @@ SELECT is_palindrome('helloollehhelloollehhelloollehhelloollehhelloollehhellooll
  t
 (1 row)
 
+SELECT is_anagram('hello', 'hello');
+ is_anagram 
+------------
+ t
+(1 row)
+
+SELECT is_anagram('dirty room', 'dormitory');
+ is_anagram 
+------------
+ f
+(1 row)
+
+SELECT is_anagram('dormitory', 'dirty room');
+ is_anagram 
+------------
+ t
+(1 row)
+
+SELECT is_anagram('tar', 'cat');
+ is_anagram 
+------------
+ f
+(1 row)
+
+SELECT is_anagram('tar', 'rat');
+ is_anagram 
+------------
+ t
+(1 row)
+
+SELECT is_anagram('elbow', 'below');
+ is_anagram 
+------------
+ t
+(1 row)
+
+SELECT is_anagram('below', 'elbow');
+ is_anagram 
+------------
+ t
+(1 row)
+
+SELECT is_anagram('robed', 'bored');
+ is_anagram 
+------------
+ t
+(1 row)
+
+SELECT is_anagram('bored', 'robed');
+ is_anagram 
+------------
+ t
+(1 row)
+
+SELECT is_anagram('stressed', 'desserts');
+ is_anagram 
+------------
+ t
+(1 row)
+
+SELECT is_anagram('bad credit', 'debit card');
+ is_anagram 
+------------
+ t
+(1 row)
+
+SELECT is_anagram('debit card', 'bad credit');
+ is_anagram 
+------------
+ t
+(1 row)
+
+SELECT sort_chars('qwertyuiopasdfghjklzxcvbnm');
+         sort_chars         
+----------------------------
+ abcdefghijklmnopqrstuvwxyz
+(1 row)
+

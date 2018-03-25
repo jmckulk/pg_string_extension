@@ -14,16 +14,17 @@ int compare(const void*, const void*);
 int len_with_no_spaces(const char *s);
 int len_with_no_spaces(const char *s){
   const char * sc;
-
+  int count = 0;
   sc = s;
 
   while(*sc != '\0'){
-    if(*sc != ' '){
-      sc++;
+    if(*sc == ' '){
+      count++;
     }
+    sc++;
   }
 
-  return sc - s;
+  return sc - s - count;
 }
 
 Datum
@@ -107,25 +108,16 @@ is_anagram(PG_FUNCTION_ARGS){
   char *c_word_a = text_to_cstring(word_a);
   char *c_word_b = text_to_cstring(word_b);
 
-  int len_a = len_with_no_spaces(c_word_a);
-  int len_b = len_with_no_spaces(c_word_b);
+  int i, len_a = strlen(c_word_a);
 
-  if(len_a != len_b){
-    PG_RETURN_BOOL(false);
-  }
-
-  qsort(c_word_a, strlen(c_word_a), sizeof(char), compare);
-  qsort(c_word_b, strlen(c_word_b), sizeof(char), compare);
-
-  int len = strlen(c_word_a);
-  int i;
-
-  for(i = 0; i < len; i++){
-    if(c_word_a[i] != c_word_b[i]){
+  for(i = 0; i < len_a; i++){
+    char * char_b = strchr(c_word_b, c_word_a[i]);
+    if(char_b == NULL){
       PG_RETURN_BOOL(false);
+    } else {
+      * char_b = '{';
     }
   }
-
 
   PG_RETURN_BOOL(true);
 }
